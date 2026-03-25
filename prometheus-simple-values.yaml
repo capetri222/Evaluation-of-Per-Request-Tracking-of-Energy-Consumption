@@ -1,0 +1,49 @@
+# prometheus-simple-values.yaml
+kube-state-metrics:
+  enabled: false
+
+alertmanager:
+  enabled: false
+
+prometheus-node-exporter:
+  enabled: false
+
+prometheus-pushgateway:
+  enabled: false
+
+rbac:
+  create: false
+
+server:
+  global:
+    scrape_interval: 60s
+    scrape_timeout: 900ms
+    evaluation_interval: 1s
+  persistentVolume:
+    enabled: false
+  nodeSelector:
+    scaphandre: "true"
+
+extraScrapeConfigs: |
+  - job_name: "kepler-gisele"
+    scrape_interval: 60s
+    scrape_timeout: 900ms
+    static_configs:
+      - targets:
+        - "192.168.2.188:28282"
+        labels:
+          node_name: "gisele"
+  - job_name: "kepler-sm-gpu"
+    scrape_interval: 60s
+    scrape_timeout: 900ms
+    static_configs:
+      - targets:
+        - "192.168.4.35:28282"
+        labels:
+          node_name: "sm-gpu"
+  - job_name: "node-exporter"
+    scrape_interval: 60s
+    scrape_timeout: 900ms
+    static_configs:
+      - targets:
+        - "prometheus-prometheus-node-exporter.monitoring.svc.cluster.local:9100"

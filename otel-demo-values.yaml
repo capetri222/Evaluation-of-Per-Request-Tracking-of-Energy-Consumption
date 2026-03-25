@@ -1,0 +1,56 @@
+# otel-demo-values.yaml
+default:
+  schedulingRules:
+    nodeSelector:
+      scaphandre: "true"
+
+grafana:
+  enabled: false
+
+prometheus:
+  enabled: false
+
+opentelemetry-collector:
+  presets:
+    hostMetrics:
+      enabled: false
+    kubernetesAttributes:
+      enabled: false
+    kubeletMetrics:
+      enabled: false
+    clusterMetrics:
+      enabled: false
+    annotationDiscovery:
+      metrics:
+        enabled: false
+    kubernetesEvents:
+      enabled: false
+  config:
+    exporters:
+      otlphttp/prometheus:
+        endpoint: http://cpetri-prometheus-server.christianpetri-otel-demo.svc.cluster.local:9090/api/v1/otlp
+        tls:
+          insecure: true
+    processors:
+      probabilistic_sampler:
+        sampling_percentage: 1
+    service:
+      pipelines:
+        traces:
+          processors:
+          - memory_limiter
+          - resourcedetection
+          - resource
+          - transform
+          - probabilistic_sampler
+          - batch
+
+jaeger:
+  jaeger:
+    nodeSelector:
+      scaphandre: "true"
+
+opensearch:
+  maxUnavailable: 0
+  nodeSelector:
+    scaphandre: "true"
